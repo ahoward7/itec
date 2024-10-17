@@ -1,10 +1,10 @@
 from django.contrib.auth.models import Group, User
-from rest_framework.decorators import action
-from rest_framework import permissions, viewsets
 from django.http import HttpResponse
 
-from itec.serializers import GroupSerializer, UserSerializer
+from rest_framework.decorators import action
+from rest_framework import permissions, viewsets
 
+from itec.serializers import GroupSerializer, UserSerializer
 from itec.excel import exportToExcel
 
 
