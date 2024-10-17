@@ -8,6 +8,7 @@ from typing import List, Dict, Tuple
 
 
 def exportToExcel(items: List[Dict], serializer, file_name: str = 'data.xlsx', directory: str = None) -> str:
+    """Export a list of dictionaries to an Excel file"""
     if not isinstance(items, list) or not all(isinstance(item, dict) for item in items):
         raise ValueError('Input must be a list of dictionaries')
 
@@ -21,6 +22,7 @@ def exportToExcel(items: List[Dict], serializer, file_name: str = 'data.xlsx', d
 
 
 def getFields(items: List[Dict], serializer) -> List[Dict]:
+    """Get the fields from the serializer and filter the items"""
     fields = serializer.Meta.fields
     filtered_items = []
     for item in items:
@@ -33,6 +35,7 @@ def getFields(items: List[Dict], serializer) -> List[Dict]:
 
 
 def createWorkbook(fields: List[Dict], file_name: str = 'data.xlsx', directory: str = None) -> Tuple[Workbook, str]:
+    """Create a workbook from a list of dictionaries"""
     df = pd.DataFrame(fields)
     df.columns = df.columns.str.replace('_', ' ').str.title()
 
@@ -56,6 +59,7 @@ def createWorkbook(fields: List[Dict], file_name: str = 'data.xlsx', directory: 
 
 
 def formatCells(wb: Workbook) -> None:
+    """Format the cells in the excel workbook"""
     ws = wb.active
     header_font = Font(bold=True, color='FFFFFF')
     header_fill = PatternFill(start_color='0000FF', end_color='0000FF', fill_type='solid')
