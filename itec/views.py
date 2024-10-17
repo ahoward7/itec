@@ -17,7 +17,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    # Custom action to export user data
     @action(detail=False, methods=['get'], url_path='export-users')
     def export_users(self, request):
         userList = User.objects.all().values()

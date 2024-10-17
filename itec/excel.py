@@ -1,16 +1,26 @@
 import os
 import pandas as pd
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 from openpyxl.styles import Font, PatternFill
+from openpyxl.utils.dataframe import dataframe_to_rows
 from datetime import datetime
 
 
-def exportToExcel(items: list[dict], serializer, directory=None):
+def exportToExcel(items: list[dict], serializer, file_name='data.xlsx', directory=None):
     if not isinstance(items, list) or not all(isinstance(item, dict) for item in items):
         raise ValueError('Input must be a list of dictionaries')
 
-    fields = serializer.Meta.fields
+    fields = getFields(items, serializer)
 
+    wb, file_path = createWorkbook(fields, file_name, directory)
+    formatCells(wb)
+    wb.save(file_path)
+
+    return file_path
+
+
+def getFields(items, serializer):
+    fields = serializer.Meta.fields
     filtered_items = []
     for item in items:
         filtered_item = {field: item[field] for field in fields if field in item}
@@ -18,11 +28,12 @@ def exportToExcel(items: list[dict], serializer, directory=None):
             if isinstance(value, datetime):
                 filtered_item[key] = value.replace(tzinfo=None)
         filtered_items.append(filtered_item)
+    return filtered_items
 
-    df = pd.DataFrame(filtered_items)
+
+def createWorkbook(fields, file_name='data.xlsx', directory=None):
+    df = pd.DataFrame(fields)
     df.columns = df.columns.str.replace('_', ' ').str.title()
-
-    file_name = 'exported_data.xlsx'
 
     if directory:
         if not os.path.exists(directory):
@@ -31,11 +42,20 @@ def exportToExcel(items: list[dict], serializer, directory=None):
     else:
         file_path = file_name
 
-    df.to_excel(file_path, index=False)
+    if os.path.exists(file_path):
+        wb = load_workbook(file_path)
+    else:
+        wb = Workbook()
+        ws = wb.active
 
-    wb = load_workbook(file_path)
+        for r in dataframe_to_rows(df, index=False, header=True):
+            ws.append(r)
+
+    return wb, file_path
+
+
+def formatCells(wb):
     ws = wb.active
-
     header_font = Font(bold=True, color='FFFFFF')
     header_fill = PatternFill(
         start_color='0000FF', end_color='0000FF', fill_type='solid'
@@ -49,6 +69,4 @@ def exportToExcel(items: list[dict], serializer, directory=None):
         for cell in row:
             cell.font = Font(bold=True)
 
-    wb.save(file_path)
-
-    return file_path
+    return ws
