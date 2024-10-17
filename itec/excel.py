@@ -4,9 +4,10 @@ from openpyxl import load_workbook, Workbook
 from openpyxl.styles import Font, PatternFill
 from openpyxl.utils.dataframe import dataframe_to_rows
 from datetime import datetime
+from typing import List, Dict, Tuple
 
 
-def exportToExcel(items: list[dict], serializer, file_name='data.xlsx', directory=None):
+def exportToExcel(items: List[Dict], serializer, file_name: str = 'data.xlsx', directory: str = None) -> str:
     if not isinstance(items, list) or not all(isinstance(item, dict) for item in items):
         raise ValueError('Input must be a list of dictionaries')
 
@@ -19,7 +20,7 @@ def exportToExcel(items: list[dict], serializer, file_name='data.xlsx', director
     return file_path
 
 
-def getFields(items, serializer):
+def getFields(items: List[Dict], serializer) -> List[Dict]:
     fields = serializer.Meta.fields
     filtered_items = []
     for item in items:
@@ -31,7 +32,7 @@ def getFields(items, serializer):
     return filtered_items
 
 
-def createWorkbook(fields, file_name='data.xlsx', directory=None):
+def createWorkbook(fields: List[Dict], file_name: str = 'data.xlsx', directory: str = None) -> Tuple[Workbook, str]:
     df = pd.DataFrame(fields)
     df.columns = df.columns.str.replace('_', ' ').str.title()
 
@@ -54,12 +55,10 @@ def createWorkbook(fields, file_name='data.xlsx', directory=None):
     return wb, file_path
 
 
-def formatCells(wb):
+def formatCells(wb: Workbook) -> None:
     ws = wb.active
     header_font = Font(bold=True, color='FFFFFF')
-    header_fill = PatternFill(
-        start_color='0000FF', end_color='0000FF', fill_type='solid'
-    )
+    header_fill = PatternFill(start_color='0000FF', end_color='0000FF', fill_type='solid')
 
     for cell in ws[1]:
         cell.font = header_font
@@ -69,4 +68,4 @@ def formatCells(wb):
         for cell in row:
             cell.font = Font(bold=True)
 
-    return ws
+    return
