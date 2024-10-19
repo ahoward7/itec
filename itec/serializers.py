@@ -3,13 +3,13 @@ from itec.models import Asset
 from rest_framework import serializers
 
 
-class FullAssetSerializer(serializers.HyperlinkedModelSerializer):
+class AssetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Asset
         fields = '__all__'
 
 
-class AssetSerializer(serializers.HyperlinkedModelSerializer):
+class AssetBasicSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Asset
         fields = ['item_description', 'manufacturer_name', 'manufacturer_model_number', 'serial_number', 'sub_location', 'room', 'cube', 'ok', 'classification', 'comments']

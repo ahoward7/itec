@@ -5,22 +5,22 @@ from django.http import HttpResponse
 from rest_framework.decorators import action
 from rest_framework import permissions, viewsets
 
-from itec.serializers import AssetSerializer, FullAssetSerializer, GroupSerializer, UserSerializer
+from itec.serializers import AssetSerializer, AssetBasicSerializer, GroupSerializer, UserSerializer
 from itec.excel import exportToExcel
 
 from rest_framework.response import Response
 
 class AssetViewSet(viewsets.ModelViewSet):
     queryset = Asset.objects.all().order_by('item_description')
-    serializer_class = FullAssetSerializer
+    serializer_class = AssetSerializer
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    @action(detail=False, methods=['get'], url_path='full')
+    @action(detail=False, methods=['get'], url_path='basic')
     def full(self, request, *args, **kwargs):
         assets = self.get_queryset()
-        serializer = AssetSerializer(assets, many=True)
+        serializer = AssetBasicSerializer(assets, many=True)
         return Response(serializer.data)
 
 
