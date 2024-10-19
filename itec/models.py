@@ -26,5 +26,5 @@ class Asset(models.Model):
     year_service_life = models.IntegerField()
     dlads = models.BooleanField(default=False)
     ok = models.BooleanField(default=True)
-    asset_class = models.CharField(max_length=50)
+    classification = models.CharField(max_length=50)
     comments = models.TextField(blank=True, null=True)
