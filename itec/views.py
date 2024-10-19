@@ -18,7 +18,7 @@ class AssetViewSet(viewsets.ModelViewSet):
         return super().list(request, *args, **kwargs)
 
     @action(detail=False, methods=['get'], url_path='basic')
-    def full(self, request, *args, **kwargs):
+    def basic(self, request, *args, **kwargs):
         assets = self.get_queryset()
         serializer = AssetBasicSerializer(assets, many=True)
         return Response(serializer.data)

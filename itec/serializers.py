@@ -9,10 +9,10 @@ class AssetSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
 
 
-class AssetBasicSerializer(serializers.HyperlinkedModelSerializer):
+class AssetBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Asset
-        fields = ['item_description', 'manufacturer_name', 'manufacturer_model_number', 'serial_number', 'sub_location', 'room', 'cube', 'ok', 'classification', 'comments']
+        fields = ['id', 'item_description', 'manufacturer_name', 'manufacturer_model_number', 'serial_number', 'sub_location', 'room_number', 'cube_number', 'ok', 'classification', 'comments']
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
