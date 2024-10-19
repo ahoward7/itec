@@ -13,8 +13,12 @@ class AccountablePropertyOfficer(models.Model):
 
 class PropertyCustodianAccount(models.Model):
     account_number = models.CharField(max_length=20, unique=True)
-    primary = models.ForeignKey('PropertyCustodian', related_name='primary_accounts', on_delete=models.SET_NULL, null=True, blank=True)
-    alternate = models.ForeignKey('PropertyCustodian', related_name='alternate_accounts', on_delete=models.SET_NULL, null=True, blank=True)
+    primary = models.ForeignKey(
+        'PropertyCustodian', related_name='primary_accounts', on_delete=models.SET_NULL, null=True, blank=True
+    )
+    alternate = models.ForeignKey(
+        'PropertyCustodian', related_name='alternate_accounts', on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     def __str__(self):
         return str(self.account_number)
@@ -24,11 +28,18 @@ class UnitInformationCode(models.Model):
     code = models.CharField(max_length=10, unique=True)
     description = models.CharField(max_length=1000)
 
+    def __str__(self):
+        return self.code
+
 
 class PropertyCustodian(models.Model):
     section = models.CharField(max_length=100)
-    property_custodian_account = models.ForeignKey(PropertyCustodianAccount, on_delete=models.SET_NULL, null=True, related_name='custodians')
-    uic = models.ForeignKey(UnitInformationCode, on_delete=models.SET_NULL, null=True, related_name='property_custodians')
+    property_custodian_account = models.ForeignKey(
+        PropertyCustodianAccount, on_delete=models.SET_NULL, null=True, related_name='custodians'
+    )
+    uic = models.ForeignKey(
+        UnitInformationCode, on_delete=models.SET_NULL, null=True, related_name='property_custodians'
+    )
     inventory_date = models.DateField()
     primary_or_alternate = models.CharField(max_length=100)
     rank = models.CharField(max_length=50)
@@ -36,17 +47,23 @@ class PropertyCustodian(models.Model):
     date_trained = models.DateField()
     date_received_appointment_letter = models.DateField()
     phone = models.CharField(max_length=15)
-    accountable_property_officer = models.ForeignKey(AccountablePropertyOfficer, related_name='accounts', on_delete=models.SET_NULL, null=True)
+    accountable_property_officer = models.ForeignKey(
+        AccountablePropertyOfficer, related_name='accounts', on_delete=models.SET_NULL, null=True
+    )
 
     def __str__(self):
         return self.name
 
 
 class Asset(models.Model):
-    accountable_uic = models.ForeignKey(UnitInformationCode, on_delete=models.SET_NULL, null=True, related_name='accountable_assets')
+    accountable_uic = models.ForeignKey(
+        UnitInformationCode, on_delete=models.SET_NULL, null=True, related_name='accountable_assets'
+    )
     asset_id = models.CharField(max_length=100, unique=True)
     attachment = models.BooleanField(default=False)
-    property_custodian_account = models.ForeignKey(PropertyCustodianAccount, related_name='assets', on_delete=models.SET_NULL, null=True, blank=True)
+    property_custodian_account = models.ForeignKey(
+        PropertyCustodianAccount, related_name='assets', on_delete=models.SET_NULL, null=True, blank=True
+    )
     item_description = models.TextField()
     location = models.CharField(max_length=100)
     manufacturer_name = models.CharField(max_length=255)
