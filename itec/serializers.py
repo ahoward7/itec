@@ -1,18 +1,12 @@
 from django.contrib.auth.models import Group, User
 from itec.models import (
+    Asset,
     AccountablePropertyOfficer,
     PropertyCustodianAccount,
     UnitInformationCode,
     PropertyCustodian,
-    Asset,
 )
 from rest_framework import serializers
-
-
-class AccountablePropertyOfficerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AccountablePropertyOfficer
-        fields = '__all__'
 
 
 class AssetSerializer(serializers.ModelSerializer):
@@ -37,6 +31,12 @@ class AssetBasicSerializer(serializers.ModelSerializer):
             'classification',
             'comments',
         ]
+
+
+class AccountablePropertyOfficerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccountablePropertyOfficer
+        fields = '__all__'
 
 
 class PropertyCustodianAccountSerializer(serializers.ModelSerializer):
