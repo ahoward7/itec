@@ -1,18 +1,30 @@
 from django.contrib.auth.models import Group, User
+from itec.models import Asset
 from django.http import HttpResponse
 
 from rest_framework.decorators import action
 from rest_framework import permissions, viewsets
 
-from itec.serializers import GroupSerializer, UserSerializer
+from itec.serializers import AssetSerializer, FullAssetSerializer, GroupSerializer, UserSerializer
 from itec.excel import exportToExcel
+
+from rest_framework.response import Response
+
+class AssetViewSet(viewsets.ModelViewSet):
+    queryset = Asset.objects.all().order_by('item_description')
+    serializer_class = FullAssetSerializer
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @action(detail=False, methods=['get'], url_path='full')
+    def full(self, request, *args, **kwargs):
+        assets = self.get_queryset()
+        serializer = AssetSerializer(assets, many=True)
+        return Response(serializer.data)
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -25,10 +37,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-
     queryset = Group.objects.all().order_by('name')
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
