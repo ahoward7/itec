@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "ITEC Inventory Management System"
+version = "0.0.1"
+description = "A Django REST API for managing inventory."
+readme = "README.md"
+authors = ["Avery Howard <avery.d.howard@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^4.2"
+djangorestframework = "^3.14"
+openpyxl = "^3.0"
+
+[tool.poetry.group.dev.dependencies]
+coverage = { extras = ["toml"], version = "^6.3.2" }
+isort = "*"
+pytest = "*"
+pytest-cov = "*"
+django-coverage-plugin = "*"
+pytest-django = "*"
+pytest-sugar = "*"
+toml = "^0.10.2"
+yapf = "^0.32.0"
+ruff = "^0.1.6"
+
+[tool.ruff.per-file-ignores]
+# ignores star imports in our settings files
+"**settings/*.py" = ["F403"]
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+line_length = 120
+use_parentheses = true
+atomic = true
